@@ -1,0 +1,53 @@
+/* home.css */
+
+body {
+    margin: 0;
+    padding: 0;
+    font-family: Arial, Helvetica, sans-serif;
+    background-color: #0f172a;
+    color: white;
+}
+
+div {
+    text-align: center;
+    margin-top: 120px;
+}
+
+#Home_Welcome_Header {
+    font-size: 48px;
+    margin-bottom: 10px;
+}
+
+#Information_para {
+    font-size: 18px;
+    margin-bottom: 40px;
+    color: #cbd5f5;
+}
+
+.Login_btn,
+.Signup_btn {
+    padding: 12px 30px;
+    font-size: 16px;
+    margin: 10px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+.Login_btn {
+    background-color: #2563eb;
+    color: white;
+}
+
+.Signup_btn {
+    background-color: #22c55e;
+    color: white;
+}
+
+.Login_btn:hover {
+    background-color: #1d4ed8;
+}
+
+.Signup_btn:hover {
+    background-color: #16a34a;
+}
