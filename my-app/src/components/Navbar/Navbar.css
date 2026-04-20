@@ -1,0 +1,56 @@
+/* Navbar.css */
+
+#navbar {
+  width: 100%;
+  background-color: #333;
+}
+
+#nav_container {
+  width: 92%;
+  margin: auto;
+  height: 50px;
+
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+#logo {
+  color: white;
+  font-size: 20px;
+  margin: 0;
+}
+
+#nav_buttons {
+  display: flex;
+  align-items: center;
+}
+
+.Login_btn,
+.Signup_btn {
+  padding: 6px 14px;
+  font-size: 14px;
+  margin-left: 8px;
+
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.Login_btn {
+  background-color: #2563eb;
+  color: white;
+}
+
+.Signup_btn {
+  background-color: #22c55e;
+  color: white;
+}
+
+.Login_btn:hover {
+  background-color: #1d4ed8;
+}
+
+.Signup_btn:hover {
+  background-color: #16a34a;
+}
