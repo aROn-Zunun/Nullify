@@ -1,0 +1,13 @@
+DB_HOST=localhost
+DB_USER=root
+DB_PASSWORD='[your password here]'
+DB_NAME=nullify_db
+DB_PORT=3306
+
+MINIO_ENDPOINT=localhost
+MINIO_PORT=9000
+MINIO_ACCESS_KEY=admin
+MINIO_SECRET_KEY=password123
+
+JWT_SECRET=your_jwt_secret_key
+JWT_EXPIRES_IN=1H

@@ -1,0 +1,110 @@
+/* create.css */
+
+#create_drop_page {
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: linear-gradient(to bottom right, #0f172a, #1e293b);
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+}
+
+#create_drop_container {
+  width: 420px;
+  padding: 30px;
+  background-color: #ffffff;
+  border-radius: 16px;
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.25);
+  text-align: center;
+}
+
+#create_drop_title {
+  font-size: 28px;
+  margin-bottom: 10px;
+  color: #0f172a;
+}
+
+#create_drop_text {
+  font-size: 14px;
+  color: #6b7280;
+  margin-bottom: 25px;
+}
+
+/* FORM */
+#create_drop_form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* DROP ZONE */
+#drop_zone {
+  border: 2px dashed #94a3b8;
+  border-radius: 12px;
+  padding: 20px;
+  width: 100%;
+  height: 160px;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
+  background-color: #f8fafc;
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+
+#drop_zone:hover {
+  border-color: #3b82f6;
+  background-color: #f1f5f9;
+}
+
+/* Optional icon */
+#drop_zone::before {
+  content: "📁";
+  font-size: 28px;
+  margin-bottom: 8px;
+}
+
+/* Text inside drop zone */
+#drop_zone p {
+  margin: 3px 0;
+  color: #334155;
+  font-size: 14px;
+}
+
+/* Choose file text */
+#choose_file_text {
+  margin-top: 8px;
+  color: #3b82f6;
+  font-weight: 600;
+  font-size: 15px;
+}
+
+/* Hide real input */
+#file_upload {
+  display: none;
+}
+
+/* BUTTON */
+#upload_button {
+  margin-top: 20px;
+  width: 100%;
+  padding: 12px;
+  border: none;
+  border-radius: 10px;
+
+  background-color: #3b82f6;
+  color: white;
+  font-size: 15px;
+  font-weight: 600;
+
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+#upload_button:hover {
+  background-color: #2563eb;
+  transform: translateY(-1px);
+}
