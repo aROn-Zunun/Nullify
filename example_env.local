@@ -1,0 +1,5 @@
+DB_HOST=localhost
+DB_USER=root
+DB_PASSWORD='[your password here]'
+DB_NAME=nullify_db
+DB_PORT=3306

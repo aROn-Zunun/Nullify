@@ -13,9 +13,9 @@ export default function Navbar() {
             <button className="Login_btn">Login</button>
           </Link>
 
-          <Link href="/signup">
-            <button className="Signup_btn">Sign up</button>
-          </Link>
+          {/*<Link href="/signup">
+          <button className="Signup_btn">Sign up</button>
+          </Link>*/}
         </div>
 
       </div>

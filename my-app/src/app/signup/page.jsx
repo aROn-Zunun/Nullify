@@ -1,5 +1,5 @@
 "use client";
-import "../styles/sign_up_styles.css";
+import "./sign_up_styles.css";
 import { useState } from "react";
 
 export default function Signup() {
