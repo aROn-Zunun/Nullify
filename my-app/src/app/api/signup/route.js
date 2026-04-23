@@ -1,4 +1,4 @@
-import db from "@/lib/db";
+import db from "@/lib/db";// data base connection.
 
 export async function POST(request) {
   try {
