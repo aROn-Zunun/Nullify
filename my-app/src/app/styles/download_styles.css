@@ -1,0 +1,47 @@
+body {
+  margin: 0;
+  padding: 0;
+  background: linear-gradient(to right, #0f172a, #1e293b);
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+#download_container {
+    margin: 0 auto;
+    width: 700px;
+    padding: 30px;
+    background-color: #ffffff;
+    border-radius: 16px;
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.25);
+    text-align: center;
+}
+
+#download_info h1 {
+    font-size: 28px;
+    margin-bottom: 10px;
+    font-weight: 600;
+    color: #0f172a;
+}
+
+#download_details {
+    color: #333;
+    margin-bottom: 25px;
+    background-color: #f8fafc;
+    padding: 20px;
+    border-radius: 12px;
+}
+
+#download_button {
+    width: 100%;
+    padding: 12px 24px;
+    background-color: #0f172a;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.25s ease;
+}
+
+#download_button:hover {
+    background-color: #1e293b;
+}

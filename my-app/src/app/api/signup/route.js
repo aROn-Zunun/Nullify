@@ -39,6 +39,18 @@ export async function POST (request) {
       )
     }
 
+    const existingUser = await db.query(
+      'SELECT id FROM users WHERE username = ? OR email = ? LIMIT 1',
+      [username, email]
+    )
+
+    if (existingUser[0].length > 0) {
+      return Response.json(
+        { error: 'Username or email already in use.' },
+        { status: 400 }
+      )
+    }
+
     const passwordHash = await bcrypt.hash(password, 10)
 
     await db.query(

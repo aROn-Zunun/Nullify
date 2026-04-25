@@ -22,7 +22,7 @@ export async function GET (request, { params }) {
 
   try {
     const result = await db.query(
-      'SELECT * FROM files WHERE object_id = ? LIMIT 1',
+      'SELECT object_id, filename FROM files WHERE object_id = ? LIMIT 1',
       [object_id]
     )
 

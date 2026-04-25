@@ -1,6 +1,6 @@
 'use client'
 
-import '@/app/styles/upload_styles.css'
+import '@/app/styles/download_styles.css'
 import { useState } from 'react'
 import { useEffect } from 'react'
 import { showToast } from 'nextjs-toast-notify'
@@ -84,6 +84,27 @@ function getFilename (response) {
 }
 
 export default function DownloadPage () {
+  const [file_info, setFileInfo] = useState(null)
+
+  const getFileInfo = async () => {
+    const object_id = window.location.pathname.split('/').pop()
+    try {
+      const response = await fetch(`/api/files/${object_id}/info`)
+      if (response.ok) {
+        const data = await response.json()
+        return data
+      } else {
+        const data = await response.json()
+        showToast.error(`Failed to fetch file info: ${data.error}`)
+        return null
+      }
+    } catch (error) {
+      console.error('Error fetching file info:', error)
+      showToast.error('An error occurred while fetching the file info.')
+      return null
+    }
+  }
+
   const downloadFile = async e => {
     e.preventDefault()
 
@@ -108,11 +129,42 @@ export default function DownloadPage () {
     }
   }
 
+  useEffect(() => {
+    getFileInfo().then(info => setFileInfo(info))
+  }, [])
+
   return (
-    <div className='download_container'>
-      <button className='download_button' onClick={downloadFile}>
+    <main id='download_container'>
+      <section id='download_info'>
+        {file_info ? (
+          <>
+            <h1 id='download_filename'>{file_info.filename}</h1>
+            <div id='download_details'>
+              <p>
+                <strong>Size:</strong>{' '}
+                {(file_info.file_size / (1024 * 1024)).toFixed(2)} MB
+              </p>
+              <p>
+                <strong>Type:</strong> {file_info.file_type}
+              </p>
+              <p>
+                <strong>Uploaded:</strong>{' '}
+                {new Date(file_info.uploaded_at).toUTCString()}
+              </p>
+              <p>
+                <strong>Modified:</strong>{' '}
+                {new Date(file_info.file_modified).toUTCString()}
+              </p>
+            </div>
+          </>
+        ) : (
+          <p id='loading_message'>Loading file information...</p>
+        )}
+      </section>
+
+      <button id='download_button' onClick={downloadFile}>
         Download File
       </button>
-    </div>
+    </main>
   )
 }

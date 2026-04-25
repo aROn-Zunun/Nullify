@@ -61,6 +61,9 @@ export default function Create() {
       const encrypted = await EncryptFile(file)
 
       formData.append('filename', file.name)
+      formData.append('file_size', file.size)
+      formData.append('file_type', file.type)
+      formData.append('file_modified', new Date(file.lastModified).toISOString().slice(0, 19).replace('T', ' '))
       formData.append('file', encrypted.file)
 
       setProgressMsg('Uploading file...')

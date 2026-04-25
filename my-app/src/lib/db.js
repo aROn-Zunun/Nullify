@@ -32,6 +32,10 @@ await db.query(`
     object_id VARCHAR(21) NOT NULL UNIQUE,
     user_id INT,
     filename varchar(255) NOT NULL,
+    file_size BIGINT NOT NULL,
+    file_type VARCHAR(255) NOT NULL,
+    file_modified TIMESTAMP NOT NULL,
+    uploaded_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
   )
 `)
