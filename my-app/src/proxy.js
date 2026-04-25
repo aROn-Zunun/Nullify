@@ -8,7 +8,8 @@ export async function proxy (request) {
   // 2. Define protected routes (example: all pages except the login page)
   const isProtectedRoute = !(
     request.nextUrl.pathname.startsWith('/login') ||
-    request.nextUrl.pathname.startsWith('/signup')
+    request.nextUrl.pathname.startsWith('/signup') ||
+    request.nextUrl.pathname === '/'
   )
 
   if (isProtectedRoute) {

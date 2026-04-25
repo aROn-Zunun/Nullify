@@ -1,5 +1,5 @@
 'use client'
-import '../styles/sign_up_styles.css'
+import './sign_up_styles.css'
 import { useState } from 'react'
 import { showToast } from 'nextjs-toast-notify'
 import { useRouter } from 'next/navigation'
@@ -43,7 +43,7 @@ export default function Signup () {
       <form id='signup_form' method='post' onSubmit={handleSubmit}>
         <div id='username_field'>
           <label id='username_label'>Username</label>
-          <br />
+          
           <input
             id='username_input'
             type='text'
@@ -56,7 +56,7 @@ export default function Signup () {
 
         <div id='email_field'>
           <label id='email_label'>Email</label>
-          <br />
+          
           <input
             id='email_input'
             type='email'
@@ -69,7 +69,7 @@ export default function Signup () {
 
         <div id='password_field'>
           <label id='password_label'>Password</label>
-          <br />
+          
           <input
             id='password_input'
             type='password'
@@ -80,7 +80,6 @@ export default function Signup () {
           />
         </div>
 
-        <br />
         <button id='signup_button' type='submit'>
           Sign Up
         </button>
