@@ -1,5 +1,5 @@
 "use client";
-import "./create.css";
+import "@/app/styles/upload_styles.css";
 import { useState } from 'react'
 import { useEffect } from 'react'
 import { showToast } from 'nextjs-toast-notify'

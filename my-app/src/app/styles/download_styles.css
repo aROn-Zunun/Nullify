@@ -8,6 +8,7 @@ body {
 #download_container {
     margin: 0 auto;
     width: 700px;
+    min-width: fit-content;
     padding: 30px;
     background-color: #ffffff;
     border-radius: 16px;

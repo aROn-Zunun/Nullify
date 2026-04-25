@@ -34,9 +34,6 @@ export default function Navbar() {
       {
         user ? (
           <div id="nav_buttons">
-            <Link href="/dashboard">
-              <button className="Dashboard_btn">Dashboard</button>
-            </Link>
             <Link href="/upload">
               <button className="Upload_btn">Upload</button>
             </Link>
