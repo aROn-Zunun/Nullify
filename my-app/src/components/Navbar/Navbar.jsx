@@ -29,7 +29,9 @@ export default function Navbar() {
     <nav id="navbar">
       <div id="nav_container">
 
+      <Link href="/">
         <h2 id="logo">Nullify</h2>
+      </Link>
 
       {
         user ? (

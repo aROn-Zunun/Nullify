@@ -4,6 +4,12 @@ import { useState } from 'react'
 import { showToast } from 'nextjs-toast-notify'
 import { useRouter } from 'next/navigation'
 
+function isStrongPassword (password) {
+  const strongPasswordRegex =
+    /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/
+  return strongPasswordRegex.test(password)
+}
+
 export default function Signup () {
   const [username, setUsername] = useState('')
   const [email, setEmail] = useState('')
@@ -12,6 +18,11 @@ export default function Signup () {
 
   async function handleSubmit (event) {
     event.preventDefault()
+
+    if (password !== event.target.password_verify.value) {
+      showToast.error('Passwords do not match')
+      return
+    }
 
     const response = await fetch('/api/signup', {
       method: 'POST',
@@ -78,6 +89,21 @@ export default function Signup () {
             value={password}
             onChange={e => setPassword(e.target.value)}
           />
+        </div>
+
+        <div id='password_verify_field'>
+          <label id='password_verify_label'>Verify Password</label>
+
+          <input
+            id='password_verify_input'
+            type='password'
+            name='password_verify'
+            required
+          />
+        </div>
+
+        <div id='password_requirements'>
+          <p className={password.length > 0 ? (isStrongPassword(password) ? 'strong' : 'weak') : ''}>Password must be at least 8 characters long and contain a mix of uppercase letters, lowercase letters, numbers, and special characters.</p>
         </div>
 
         <button id='signup_button' type='submit'>
