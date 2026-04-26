@@ -1,6 +1,6 @@
 import db from '@/lib/db'
 import { parseAuthCookie, verifyJwt } from '@/utils/jwt'
-
+//api to fetch count of uploaded files
 export async function GET(request) 
 {
   try {
