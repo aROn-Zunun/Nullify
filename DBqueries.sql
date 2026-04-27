@@ -10,6 +10,7 @@ CREATE TABLE users (
   username VARCHAR(100) NOT NULL UNIQUE,
   email VARCHAR(255) NOT NULL UNIQUE,
   password_hash VARCHAR(255) NOT NULL,
+  is_admin BOOLEAN DEFAULT FALSE, 
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 
   CONSTRAINT min_username_length CHECK (CHAR_LENGTH(username) >= 5),
