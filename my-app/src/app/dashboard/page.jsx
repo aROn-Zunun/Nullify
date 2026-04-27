@@ -29,6 +29,22 @@ export default function Dashboard() {
     setShowFiles(true)
   }
 
+  async function handleDeleteFile(objectId) {
+  const response = await fetch(`/api/dashboard/files/${objectId}`, {
+    method: 'DELETE'
+  })
+
+  const data = await response.json()
+
+  if (!response.ok) {
+    console.log(data.error)
+    return
+  }
+
+  setFiles(files.filter(file => file.object_id !== objectId))
+   setCount(count - 1)
+}
+
   
   return (
     <div id="dashboard_container">
@@ -50,18 +66,21 @@ export default function Dashboard() {
   </section>
   {showFiles && (
   <div id="users_files">
-
     {files.map((file) => (
       <div key={file.id} className="file_card">
-
         <h3>{file.filename}</h3>
 
-        <p>{file.object_id}</p>
-
-        <button>
-          Delete
+        <button
+          onClick={() => handleDeleteFile(file.object_id)}
+        >
+          {file.object_id}
         </button>
 
+        <button
+          onClick={() => handleDeleteFile(file.object_id)}
+        >
+          Delete
+        </button>
       </div>
     ))}
   </div>
