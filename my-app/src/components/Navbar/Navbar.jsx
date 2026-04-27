@@ -36,6 +36,11 @@ export default function Navbar() {
       {
         user ? (
           <div id="nav_buttons">
+            {user.isAdmin && (
+              <Link href="/admin">
+                <button className="Admin_btn">Admin</button>
+              </Link>
+            )}
             <Link href="/upload">
               <button className="Upload_btn">Upload</button>
             </Link>

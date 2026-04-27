@@ -5,6 +5,14 @@ body {
   font-family: Arial, Helvetica, sans-serif;
 }
 
+#download_page {
+    flex: 1;
+    padding: 40px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
 #download_container {
     margin: 0 auto;
     width: 700px;

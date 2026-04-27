@@ -54,8 +54,8 @@ export async function POST (request) {
     const passwordHash = await bcrypt.hash(password, 10)
 
     await db.query(
-      'INSERT INTO users (username, email, password_hash) VALUES (?, ?, ?)',
-      [username, email, passwordHash]
+      'INSERT INTO users (username, email, password_hash, is_admin) VALUES (?, ?, ?, ?)',
+      [username, email, passwordHash, false]
     )
 
     return Response.json({ message: 'User created successfully' })

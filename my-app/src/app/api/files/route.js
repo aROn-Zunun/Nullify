@@ -112,8 +112,11 @@ export async function DELETE (request, { params }) {
       return Response.json({ error: 'File not found' }, { status: 404 })
     }
 
-    await minioClient.removeObject('files', object_id)
-    await db.query('DELETE FROM files WHERE object_id = ?', [object_id])
+    try {
+      await minioClient.removeObject('files', object_id)
+    } finally {
+      await db.query('DELETE FROM files WHERE object_id = ?', [object_id])
+    }
 
     return Response.json({ message: 'File deleted successfully' })
   } catch (error) {

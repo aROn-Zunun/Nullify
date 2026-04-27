@@ -1,6 +1,6 @@
 "use client";
 
-import "../styles/admin_styles.css"
+import "@/app/styles/admin.css"
 import {uesEffect,useEffect,useState} from "react"
 export default function AdminPage(){
     const [stats, setStats]=useState({user_count:0, file_count:0});

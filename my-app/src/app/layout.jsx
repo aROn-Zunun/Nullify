@@ -26,7 +26,9 @@ export default function RootLayout ({ children }) {
     >
       <body className='min-h-full flex flex-col'>
         <Navbar />
-        <main style={{ flex: 1 }}>{children}</main>
+        <main style={{ flex: 1, display: 'flex', flexDirection: 'column' }} id='main-content'>
+          {children}
+        </main>
         <Footer />
       </body>
     </html>

@@ -134,37 +134,39 @@ export default function DownloadPage () {
   }, [])
 
   return (
-    <main id='download_container'>
-      <section id='download_info'>
-        {file_info ? (
-          <>
-            <h1 id='download_filename'>{file_info.filename}</h1>
-            <div id='download_details'>
-              <p>
-                <strong>Size:</strong>{' '}
-                {(file_info.file_size / (1024 * 1024)).toFixed(2)} MB
-              </p>
-              <p>
-                <strong>Type:</strong> {file_info.file_type}
-              </p>
-              <p>
-                <strong>Uploaded:</strong>{' '}
-                {new Date(file_info.uploaded_at).toUTCString()}
-              </p>
-              <p>
-                <strong>Modified:</strong>{' '}
-                {new Date(file_info.file_modified).toUTCString()}
-              </p>
-            </div>
-          </>
-        ) : (
-          <p id='loading_message'>Loading file information...</p>
-        )}
-      </section>
+    <main id='download_page'>
+      <div id='download_container'>
+        <section id='download_info'>
+          {file_info ? (
+            <>
+              <h1 id='download_filename'>{file_info.filename}</h1>
+              <div id='download_details'>
+                <p>
+                  <strong>Size:</strong>{' '}
+                  {(file_info.file_size / (1024 * 1024)).toFixed(2)} MB
+                </p>
+                <p>
+                  <strong>Type:</strong> {file_info.file_type}
+                </p>
+                <p>
+                  <strong>Uploaded:</strong>{' '}
+                  {new Date(file_info.uploaded_at).toUTCString()}
+                </p>
+                <p>
+                  <strong>Modified:</strong>{' '}
+                  {new Date(file_info.file_modified).toUTCString()}
+                </p>
+              </div>
+            </>
+          ) : (
+            <p id='loading_message'>Loading file information...</p>
+          )}
+        </section>
 
-      <button id='download_button' onClick={downloadFile}>
-        Download File
-      </button>
-    </main>
+        <button id='download_button' onClick={downloadFile}>
+          Download File
+        </button>
+      </div>
+  </main>
   )
 }

@@ -37,7 +37,7 @@ export default function Login () {
       <h1 id='login_header'>Login</h1>
       <p id='login_description'>Please enter your credentials to login.</p>
 
-      <form id='login_form' onSubmit={handleSubmit}>
+      <form id='login_form' action="post" onSubmit={handleSubmit}>
         <div id='username_field'>
           <label id='username_label'>Username</label>
 

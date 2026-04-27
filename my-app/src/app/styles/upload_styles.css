@@ -7,14 +7,12 @@ body {
 }
 
 #create_drop_page {
-  min-height: 100vh;
-
+  flex: 1;
+  padding: 40px;
   display: flex;
   justify-content: center;
-  align-items: flex-start;
+  align-items: center;
   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-
-  padding-top: 80px
 }
 
 #create_drop_container {

@@ -39,6 +39,13 @@ export async function proxy (request) {
 
     // 5. Verification passed: Attach user information to the request context (optional, needs to be used with route parameters)
     // Or obtain it through the getToken function in subsequent processing
+
+    // Admin route: If the user is not an admin, redirect to the dashboard or show an error
+    if (request.nextUrl.pathname.startsWith('/admin')) {
+      if (!payload.isAdmin) {
+        return NextResponse.redirect(new URL('/dashboard', request.url))
+      }
+    }
   } else {
     // 6. Login page: If authenticated, redirect to the dashboard
     if (token && verifyJwt(token)) {
