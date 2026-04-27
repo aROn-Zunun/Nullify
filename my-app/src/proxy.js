@@ -5,6 +5,15 @@ export async function proxy (request) {
   // 1. Get the JWT from the Cookie
   const token = parseAuthCookie(request.headers.get('cookie'))
 
+  /*//admin route - payload will containt : logged_in && is_admin 
+  if (request.nextUrl.pathname.startsWith("/api/admin")){
+    const payload=verifyJwt(token)
+      if (!payload.isAdmin){
+        return NextResponse.json ({error: 'Forbidden'}, {status:403})
+      }
+  }
+  */
+
   // 2. Define protected routes (example: all pages except the login page)
   const isProtectedRoute = !(
     request.nextUrl.pathname.startsWith('/login') ||

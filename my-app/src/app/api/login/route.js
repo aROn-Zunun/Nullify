@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server'
-
+//import { signJwt } from '@/utils/jwt'
 import db from '@/lib/db'
 import jwt from 'jsonwebtoken'
 import { compare } from 'bcryptjs'
@@ -11,7 +11,7 @@ export async function POST (request) {
     const { username, password } = data
 
     const result = await db.query(
-      'SELECT id, username, password_hash FROM users WHERE username = ? LIMIT 1',
+      'SELECT id, username, password_hash, is_admin FROM users WHERE username = ? LIMIT 1',//now includes if user is_admin
       [username]
     )
 
@@ -29,10 +29,11 @@ export async function POST (request) {
 
     // Generate JWT
     const token = jwt.sign(
-      { userId: user.id, username: user.username }, // The payload contains userid and username
+      { userId: user.id, username: user.username, isAdmin: user.is_admin  }, // The payload contains userid and username and if theyre an admin
       process.env.JWT_SECRET,
       { expiresIn: process.env.JWT_EXPIRES_IN }
     )
+    //const token = signJwt({ userId: user.id, username: user.username, isAdmin: user.is_admin })// only if we sign the payload in our jwt.js
 
     // Set an HttpOnly Cookie (security attribute)
     const response = NextResponse.json({ message: 'Login successful' })
