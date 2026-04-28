@@ -22,7 +22,7 @@ export default function Navbar() {
 
   const handleLogout = async () => {
     await fetch('/api/logout')
-    window.location.href = '/login'
+    window.location.href = '/'
   }
 
   return (
