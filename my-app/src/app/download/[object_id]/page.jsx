@@ -4,6 +4,8 @@ import '@/app/styles/download_styles.css'
 import { useState } from 'react'
 import { useEffect } from 'react'
 import { showToast } from 'nextjs-toast-notify'
+import NotFound from '@/app/not-found'
+import Loading from '@/components/Loading/Loading'
 
 async function importHexKey (hexString, algorithm = 'AES-GCM') {
   const keyData = Uint8Array.fromHex(hexString)
@@ -85,6 +87,10 @@ function getFilename (response) {
 
 export default function DownloadPage () {
   const [file_info, setFileInfo] = useState(null)
+  const [encryptionKey, setEncryptionKey] = useState('')
+  const [showKeyModal, setShowKeyModal] = useState(false)
+  const [notFound, setNotFound] = useState(false)
+  const [keyInput, setKeyInput] = useState('')
 
   const getFileInfo = async () => {
     const object_id = window.location.pathname.split('/').pop()
@@ -105,10 +111,23 @@ export default function DownloadPage () {
     }
   }
 
+  const handleKeySubmit = (e) => {
+    e.preventDefault()
+    if (keyInput.trim() === '') {
+      showToast.error('Please enter a decryption key')
+      return
+    }
+    setEncryptionKey(keyInput)
+    setShowKeyModal(false)
+  }
+
   const downloadFile = async e => {
     e.preventDefault()
 
-    const encryptionKey = window.location.hash.substring(1)
+    if (!encryptionKey) {
+      showToast.error('Decryption key is required')
+      return
+    }
 
     const object_id = window.location.pathname.split('/').pop()
     try {
@@ -130,43 +149,76 @@ export default function DownloadPage () {
   }
 
   useEffect(() => {
-    getFileInfo().then(info => setFileInfo(info))
+    const urlKey = window.location.hash.substring(1)
+    if (urlKey) {
+      setEncryptionKey(urlKey)
+    } else {
+      setShowKeyModal(true)
+    }
+    
+    getFileInfo().then(info => {
+      setFileInfo(info);
+
+      if (!info) {
+        setNotFound(true);
+      }
+    })
   }, [])
+
+  if (notFound)
+    return <NotFound/>;
+
+  if (!file_info)
+    return <Loading/>;
 
   return (
     <main id='download_page'>
+      {/* Key Modal */}
+      {showKeyModal && (
+        <div id='key_modal_overlay'>
+          <div id='key_modal'>
+            <h2>Enter Decryption Key</h2>
+            <p>This file requires a decryption key to download. Please enter the key provided to you.</p>
+            <form onSubmit={handleKeySubmit}>
+              <input
+                type='password'
+                placeholder='Enter decryption key (hex format)'
+                value={keyInput}
+                onChange={(e) => setKeyInput(e.target.value)}
+                id='key_input'
+              />
+              <button type='submit' className='btn-primary'>Unlock</button>
+            </form>
+          </div>
+        </div>
+      )}
+
       <div id='download_container'>
         <section id='download_info'>
-          {file_info ? (
-            <>
-              <h1 id='download_filename'>{file_info.filename}</h1>
-              <div id='download_details'>
-                <p>
-                  <strong>Size:</strong>{' '}
-                  {(file_info.file_size / (1024 * 1024)).toFixed(2)} MB
-                </p>
-                <p>
-                  <strong>Type:</strong> {file_info.file_type}
-                </p>
-                <p>
-                  <strong>Uploaded:</strong>{' '}
-                  {new Date(file_info.uploaded_at).toUTCString()}
-                </p>
-                <p>
-                  <strong>Modified:</strong>{' '}
-                  {new Date(file_info.file_modified).toUTCString()}
-                </p>
-              </div>
-            </>
-          ) : (
-            <p id='loading_message'>Loading file information...</p>
-          )}
+          <h1 id='download_filename'>{file_info.filename}</h1>
+          <div id='download_details'>
+            <p>
+              <strong>Size:</strong>{' '}
+              {(file_info.file_size / (1024 * 1024)).toFixed(2)} MB
+            </p>
+            <p>
+              <strong>Type:</strong> {file_info.file_type}
+            </p>
+            <p>
+              <strong>Uploaded:</strong>{' '}
+              {new Date(file_info.uploaded_at).toUTCString()}
+            </p>
+            <p>
+              <strong>Modified:</strong>{' '}
+              {new Date(file_info.file_modified).toUTCString()}
+            </p>
+          </div>
         </section>
 
         <button id='download_button' onClick={downloadFile}>
           Download File
         </button>
       </div>
-  </main>
+    </main>
   )
 }
