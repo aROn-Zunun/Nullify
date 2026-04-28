@@ -70,7 +70,7 @@ export default function Dashboard() {
     {files.map((file) => (
       <div key={file.id} className="file_card">
         <h3>{file.filename}</h3>
-        <span id="file_size">{(file.file_size / (1024 * 1024)).toFixed(2)} MB</span>
+        <span id="file_size">size: {(file.file_size / (1024 * 1024)).toFixed(2)} MB</span>
         <p id="uploaded_at">posted on: {new Date(file.uploaded_at).toISOString().slice(0, 19).replace('T', ' ')}</p>
         <p id="file_type">File type:{file. file_type || 'Unknown'}</p>
     

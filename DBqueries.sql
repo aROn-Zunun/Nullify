@@ -1,26 +1,4 @@
+##ds.js should handle if the databas isnt made yet , but to get admin status run this query to get admin privileg and set the username to the correct one
 
-CREATE DATABASE IF NOT EXISTS nullify_db;
-USE nullify_db;
 
-DROP TABLE IF EXISTS files CASCADE;
-DROP TABLE IF EXISTS users CASCADE;
-
-CREATE TABLE users (
-  id INT AUTO_INCREMENT PRIMARY KEY,
-  username VARCHAR(100) NOT NULL UNIQUE,
-  email VARCHAR(255) NOT NULL UNIQUE,
-  password_hash VARCHAR(255) NOT NULL,
-  is_admin BOOLEAN DEFAULT FALSE, 
-  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-
-  CONSTRAINT min_username_length CHECK (CHAR_LENGTH(username) >= 5),
-  CONSTRAINT email_format CHECK (email REGEXP '^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$')
-);
-
-CREATE TABLE files (
-  id INT AUTO_INCREMENT PRIMARY KEY,
-  object_id VARCHAR(21) NOT NULL UNIQUE,
-  user_id INT,
-  filename varchar(255) NOT NULL,
-  FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
-);
+UPDATE users SET is_admin = 1 WHERE username = 'YOUR_USERNAME';
