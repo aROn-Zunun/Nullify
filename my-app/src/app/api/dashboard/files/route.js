@@ -19,7 +19,7 @@ export async function GET (request){
     const userId= payload.userId
 
     const [files] = await db.query(
-    'SELECT id, object_id, filename FROM files WHERE user_id = ? ORDER BY id DESC',
+    'SELECT id, object_id, filename, file_size,  file_type,  uploaded_at FROM files WHERE user_id = ? ORDER BY id DESC',
     [userId]
 )
     return Response.json ({files})
