@@ -31,19 +31,24 @@ export default function Dashboard() {
   }
 
   async function handleDeleteFile(objectId) {
-  const response = await fetch(`/api/dashboard/files/${objectId}`, {
-    method: 'DELETE'
-  })
+  const response = await fetch(`/api/dashboard/files/${objectId}`, {method: 'DELETE'})
 
-  const data = await response.json()
-
-  if (!response.ok) {
-    console.log(data.error)
+  if (!response.ok){
+    console.log (data.error)
     return
   }
-
+  
   setFiles(files.filter(file => file.object_id !== objectId))
-   setCount(count - 1)
+  setCount(count - 1)
+}
+  
+  
+  async function deleteAccount(){
+    const res= await fetch ('/api/delete_account',{method: 'DELETE'})
+    if (res.ok){
+      await fetch ('/api/logout',{method: 'GET'})
+      window.location.href = '/'
+    }
 }
 
   
@@ -61,6 +66,7 @@ export default function Dashboard() {
   
 
     <div className="dashboard_card">
+      
       <p className="card_label">Manage Files</p>
       <button onClick={handleViewFiles}className="dashboard_button" >View Files</button>
     </div>
@@ -84,6 +90,7 @@ export default function Dashboard() {
     ))}
   </div>
 )}
+  <button onClick={deleteAccount} className="dashboard_button">Delete Account</button>
 </div>
   );
 }
