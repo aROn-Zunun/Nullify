@@ -19,10 +19,26 @@ export default function AdminPage() {
       const data = await res.json()
       setUsers(data.users)
     }
+  
+    
 
     fetchStats()
     fetchUsers()
   }, [])
+
+   //api to delete users, passing userid to the backend 
+  async function deleteUser(id){
+    const res = await fetch(`/api/admin/user/${id}`, { method: 'DELETE' })
+    if (res.ok){
+      const data = await res.json()
+      setUsers(users.filter(user => user.id!==id))
+      setStats(prev =>({
+        user_count: prev.user_count -1,
+        file_count: prev.file_count - data.deleted_file_count
+      }))
+      
+    }
+  }
 
   function toggleUser(id) {
     setExpanded(expanded === id ? null : id) // collapse if already open
@@ -67,6 +83,9 @@ export default function AdminPage() {
         <p>Files: {user.file_count}</p>
         <p>Storage: {(user.storage_used / 1024 / 1024).toFixed(2)} MB</p>
         <p>Admin: {user.is_admin ? 'Yes' : 'No'}</p>
+         <button className="delete_btn" onClick={() => deleteUser(user.id)}>
+          Delete User
+          </button>
       </div>
     )}
   </div>
