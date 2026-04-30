@@ -85,6 +85,23 @@ function getFilename (response) {
   return filename
 }
 
+async function verify_Key(decryption_key_hex) {
+  const object_id = window.location.pathname.split('/').pop()
+  const decryption_key_raw = Uint8Array.fromHex(decryption_key_hex)
+  const hash_dcrp_key = await window.crypto.subtle.digest('SHA-256', decryption_key_raw)
+  const hash_hex = Array.from(new Uint8Array(hash_dcrp_key))
+    .map(b => b.toString(16).padStart(2, '0'))
+    .join('')
+
+  const response = await fetch(`/api/files/${object_id}/verify`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ key_hash: hash_hex })
+  })
+
+  return response.ok
+}
+
 export default function DownloadPage () {
   const [file_info, setFileInfo] = useState(null)
   const [encryptionKey, setEncryptionKey] = useState('')
@@ -117,6 +134,7 @@ export default function DownloadPage () {
       showToast.error('Please enter a decryption key')
       return
     }
+    
     setEncryptionKey(keyInput)
     setShowKeyModal(false)
   }

@@ -42,6 +42,7 @@ await db.query(`
     file_type VARCHAR(255) NOT NULL,
     file_modified TIMESTAMP NOT NULL,
     uploaded_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    key_hash(60)NOT NULL UNIQUE,
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
   )
 `)

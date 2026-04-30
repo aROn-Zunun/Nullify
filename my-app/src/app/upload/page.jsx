@@ -3,6 +3,7 @@ import "@/app/styles/upload_styles.css";
 import { useState } from 'react'
 import { useEffect } from 'react'
 import { showToast } from 'nextjs-toast-notify'
+import * as bcrypt from 'bcryptjs'
 
 async function EncryptFile (file) {
   const reader = new FileReader()
@@ -17,6 +18,7 @@ async function EncryptFile (file) {
         ['encrypt']
       )
 
+      //nonce 
       const iv = window.crypto.getRandomValues(new Uint8Array(12))
 
       const ciphertext = await window.crypto.subtle.encrypt(
@@ -25,6 +27,7 @@ async function EncryptFile (file) {
         fileData
       )
 
+      
       const encryption_key = await window.crypto.subtle.exportKey('raw', key)
       const enc_key_hex = Array.from(new Uint8Array(encryption_key))
         .map(b => b.toString(16).padStart(2, '0'))
@@ -32,9 +35,18 @@ async function EncryptFile (file) {
 
       const data = new Blob([iv, new Uint8Array(ciphertext)])
 
+      //hashing the enc_key_hex
+      const hashed_key= await window.crypto.subtle.digest('SHA-256',encryption_key)
+      // convert the return array elements into hex
+      const hash_key_hex= Array.from(new Uint8Array(hashed_key))
+      .map(b => b.toString(16).padStart(2, '0'))
+      .join('')
+
+
       resolve({
         file: data,
-        key: enc_key_hex
+        key: enc_key_hex,
+        key_hashed: hash_key_hex
       })
     }
 
@@ -65,6 +77,7 @@ export default function Create() {
       formData.append('file_type', file.type)
       formData.append('file_modified', new Date(file.lastModified).toISOString().slice(0, 19).replace('T', ' '))
       formData.append('file', encrypted.file)
+      formData.append('key_hash',encrypted.key_hashed)
 
       setProgressMsg('Uploading file...')
 

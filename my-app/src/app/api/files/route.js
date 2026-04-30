@@ -2,6 +2,7 @@ import db from '@/lib/db'
 import minioClient from '@/lib/minio'
 import { Readable } from 'node:stream'
 import { parseAuthCookie, verifyJwt } from '@/utils/jwt'
+import * as bcrypt from 'bcrypt'
 
 function makeid (length) {
   var result = ''
@@ -64,6 +65,9 @@ export async function POST (request) {
     const file_size = data.get('file_size')
     const file_type = data.get('file_type')
     const file_modified = data.get('file_modified')
+    const key_hash= data.get('key_hash')
+
+    const key_hashed= await bcrypt.hash(key_hash,10)// getting hashed again but salting it as well
 
     const object_id = makeid(21)
 
@@ -74,8 +78,8 @@ export async function POST (request) {
     )
 
     await db.query(
-      'INSERT INTO files (object_id, user_id, filename, file_size, file_type, file_modified) VALUES (?, ?, ?, ?, ?, ?)',
-      [object_id, userId, filename, file_size, file_type, file_modified]
+      'INSERT INTO files (object_id, user_id, filename, file_size, file_type, file_modified, key_hash) VALUES (?, ?, ?, ?, ?, ?,?)',
+      [object_id, userId, filename, file_size, file_type, file_modified, key_hashed]
     )
 
     return Response.json({ message: 'File uploaded successfully', object_id })

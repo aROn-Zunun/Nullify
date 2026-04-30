@@ -1,4 +1,5 @@
 import db from '@/lib/db'
+import bcrypt from 'bcrypt'
 
 export async function GET (request, { params }) {
   const { object_id } = await params
