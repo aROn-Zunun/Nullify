@@ -84,16 +84,18 @@ function getFilename (response) {
 
   return filename
 }
-
+ 
 async function verify_Key(decryption_key_hex) {
   const object_id = window.location.pathname.split('/').pop()
-  const decryption_key_raw = Uint8Array.fromHex(decryption_key_hex)
+  const decryption_key_raw = new Uint8Array(
+  decryption_key_hex.match(/.{1,2}/g).map(byte => parseInt(byte, 16))
+)
   const hash_dcrp_key = await window.crypto.subtle.digest('SHA-256', decryption_key_raw)
   const hash_hex = Array.from(new Uint8Array(hash_dcrp_key))
     .map(b => b.toString(16).padStart(2, '0'))
     .join('')
 
-  const response = await fetch(`/api/files/${object_id}/verify`, {
+  const response = await fetch(`/api/files/${object_id}/verify_key`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ key_hash: hash_hex })
@@ -128,13 +130,17 @@ export default function DownloadPage () {
     }
   }
 
-  const handleKeySubmit = (e) => {
+  const handleKeySubmit = async (e) => {
     e.preventDefault()
     if (keyInput.trim() === '') {
       showToast.error('Please enter a decryption key')
       return
     }
-    
+    const isValid= await verify_Key(keyInput)
+    if (!isValid){
+      showToast.error('Invalid decryption key')
+      return
+    }
     setEncryptionKey(keyInput)
     setShowKeyModal(false)
   }
@@ -167,21 +173,27 @@ export default function DownloadPage () {
   }
 
   useEffect(() => {
-    const urlKey = window.location.hash.substring(1)
-    if (urlKey) {
-      setEncryptionKey(urlKey)
-    } else {
-      setShowKeyModal(true)
-    }
-    
-    getFileInfo().then(info => {
-      setFileInfo(info);
-
-      if (!info) {
-        setNotFound(true);
+  const urlKey = window.location.hash.substring(1)
+  if (urlKey) {
+    verify_Key(urlKey).then(isValid => {
+      if (isValid) {
+        setEncryptionKey(urlKey)
+      } else {
+        showToast.error('Invalid decryption key')
+        setShowKeyModal(true)
       }
     })
-  }, [])
+  } else {
+    setShowKeyModal(true)
+  }
+
+  getFileInfo().then(info => {
+    setFileInfo(info)
+    if (!info) {
+      setNotFound(true)
+    }
+  })
+}, [])
 
   if (notFound)
     return <NotFound/>;

@@ -36,7 +36,7 @@ export async function GET (request, { params }) {
     return new NextResponse(file, {
       headers: {
         'Content-Type': 'application/octet-stream',
-        'Content-Disposition': `attachment; filename="${file_info.filename}"`
+        'Content-Disposition': `attachment; filename*=UTF-8''${encodeURIComponent(file_info.filename)}`
       }
     })
   } catch (error) {

@@ -1,5 +1,5 @@
 import db from '@/lib/db'
-import bcrypt from 'bcrypt'
+import * as bcrypt from 'bcrypt'
 
 export async function POST(request, { params }) {
   const { object_id } = await params
