@@ -162,6 +162,10 @@ export default function DownloadPage () {
         const decryptedFile = await DecryptFile(encBlob, encryptionKey)
 
         downloadBlob(decryptedFile, getFilename(response)) // Use original filename for download
+        showToast.success("File Downloaded successfullu!")
+        setTimeout(()=>{
+          window.location.href='/dashboard'
+        },2000)
       } else {
         const data = await response.json()
         showToast.error(`Failed to fetch file: ${data.error}`)
