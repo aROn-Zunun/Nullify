@@ -3,27 +3,25 @@ import '../styles/admin_styles.css'
 import { useEffect, useState } from "react"
 
 export default function AdminPage() {
-  const [stats, setStats] = useState({ user_count: 0, file_count: 0 })
+  const [stats, setStats] = useState({ user_count: 0, file_count: 0 , total_storage: 0 })
   const [users, setUsers] = useState([])
   const [expanded, setExpanded] = useState(null) // tracks which user is expanded
+  
 
   useEffect(() => {
-    async function fetchStats() {
-      const res = await fetch('/api/admin')
+    async function fetchdata(){
+      const res= await fetch ('/api/admin')
       const data = await res.json()
-      setStats(data)
-    }
-
-    async function fetchUsers() {
-      const res = await fetch('/api/admin/user')
-      const data = await res.json()
+      
       setUsers(data.users)
+      
+      setStats( {
+      user_count: data.user_count,
+      file_count: data.file_count,
+      total_storage: data.total_storage
+    })
     }
-  
-    
-
-    fetchStats()
-    fetchUsers()
+    fetchdata()
   }, [])
 
    //api to delete users, passing userid to the backend 
@@ -57,6 +55,10 @@ export default function AdminPage() {
         <div className="stat_card">
           <p className="stat_label">Total Files</p>
           <h2 className="stat_number">{stats.file_count}</h2>
+        </div>
+        <div className="stat_card">
+          <p className="stat_label">Storage used</p>
+          <h2 className="stat_number">{(stats.total_storage/ (1024 * 1024)).toFixed(2)} MB</h2>
         </div>
       </section>
 
