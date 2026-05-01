@@ -1,6 +1,8 @@
 import db from '@/lib/db'
 import { parseAuthCookie, verifyJwt } from '@/utils/jwt'
 //api to fetch count of uploaded files
+// API is uselss , going to get return all the files metadata that the user has and just .findlength it to get the total count 
+
 export async function GET(request) 
 {
   try {

@@ -6,6 +6,7 @@ import { useRouter } from 'next/navigation';
 
 export default function Dashboard() {
   const [count, setCount]=useState(0)
+  const [totalStorage, setTotalStorage ]=useState(0)
   const router = useRouter();
   const[files, setFiles]= useState([])
   
@@ -14,33 +15,33 @@ export default function Dashboard() {
   useEffect(()=> {
     async function fetchUploadCount(){ 
       
-      const response= await fetch('/api/dashboard')
+      const response= await fetch('/api/dashboard/files')
       const data = await response.json()
 
       
-      setCount(data.file_count)
+      setCount(data.files.length)
+      setTotalStorage(data.files.reduce((sum, file) => sum + file.file_size, 0))
+      setFiles(data.files)
     }
       fetchUploadCount()
     },[])
 
   async function handleViewFiles(){
-    const response= await fetch ('/api/dashboard/files')
-    const data= await response.json ()
-    setFiles(data.files)
     setShowFiles(true)
   }
 
   async function handleDeleteFile(objectId) {
-  const response = await fetch(`/api/dashboard/files/${objectId}`, {method: 'DELETE'})
-
+    const response = await fetch(`/api/dashboard/files/${objectId}`, { method: 'DELETE' })
   if (!response.ok){
     console.log (data.error)
     return
   }
-  
-  setFiles(files.filter(file => file.object_id !== objectId))
-  setCount(count - 1)
+  const updatedFiles = files.filter(file => file.object_id !== objectId)
+    setFiles(updatedFiles)
+    setCount(updatedFiles.length) 
+    setTotalStorage(updatedFiles.reduce((sum, file) => sum + file.file_size, 0))
 }
+
   
   
   async function deleteAccount(){
@@ -63,8 +64,12 @@ export default function Dashboard() {
       <h2 className="card_number">{count}</h2>
     </div>
 
-  
+    <div className= "dashboard_card">
+      <p className="card_label">Storage Used</p>
+      <h2 className="card_number">{(totalStorage / (1024 * 1024)).toFixed(2)} MB</h2>
+    </div>
 
+   
     <div className="dashboard_card">
       
       <p className="card_label">Manage Files</p>

@@ -1,7 +1,7 @@
 import db from '@/lib/db'
 import { parseAuthCookie, verifyJwt } from '@/utils/jwt'
 //api to fetch meta data from mysql about users files
-//some how will have to the ID thats minio has it stored under
+//getting the userID to grab all of their files' metadata
 
 export async function GET (request){
     const token = parseAuthCookie(request.headers.get('cookie'))

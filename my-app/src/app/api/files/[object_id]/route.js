@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server'
 import db from '@/lib/db'
 import minioClient from '@/lib/minio'
+import bcrypt from 'bcrypt'
 
 function getFile (filename) {
   return new Promise((resolve, reject) => {
@@ -10,6 +11,7 @@ function getFile (filename) {
       stream.on('data', chunk => chunks.push(chunk))
       stream.on('end', async () => {
         await minioClient.removeObject('files', filename) // Delete the file after fetching
+        
         resolve(Buffer.concat(chunks))
       })
       stream.on('error', err => reject(err))
@@ -19,10 +21,10 @@ function getFile (filename) {
 
 export async function GET (request, { params }) {
   const { object_id } = await params
-
+  const key_hash = request.headers.get('x-key-hash')
   try {
     const result = await db.query(
-      'SELECT object_id, filename FROM files WHERE object_id = ? LIMIT 1',
+      'SELECT object_id, filename,key_hash FROM files WHERE object_id = ? LIMIT 1',
       [object_id]
     )
 
@@ -31,7 +33,11 @@ export async function GET (request, { params }) {
     }
 
     const file_info = result[0][0]
-
+    const match = await bcrypt.compare(key_hash, file_info.key_hash)
+    if (!match ){
+      return Response.json ({error:'Invalid key'}, {status:403})
+    }
+    
     const file = await getFile(file_info.object_id)
     return new NextResponse(file, {
       headers: {

@@ -84,24 +84,14 @@ function getFilename (response) {
 
   return filename
 }
- 
-async function verify_Key(decryption_key_hex) {
-  const object_id = window.location.pathname.split('/').pop()
-  const decryption_key_raw = new Uint8Array(
+async function getKeyHash(decryption_key_hex){
+  const decryption_key_raw= new Uint8Array(
   decryption_key_hex.match(/.{1,2}/g).map(byte => parseInt(byte, 16))
-)
-  const hash_dcrp_key = await window.crypto.subtle.digest('SHA-256', decryption_key_raw)
-  const hash_hex = Array.from(new Uint8Array(hash_dcrp_key))
-    .map(b => b.toString(16).padStart(2, '0'))
-    .join('')
-
-  const response = await fetch(`/api/files/${object_id}/verify_key`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ key_hash: hash_hex })
-  })
-
-  return response.ok
+  )
+  const hash = await window.crypto.subtle.digest('SHA-256', decryption_key_raw)
+  return Array.from(new Uint8Array(hash))
+  .map(b => b.toString(16).padStart(2, '0'))
+  .join('')
 }
 
 export default function DownloadPage () {
@@ -110,11 +100,13 @@ export default function DownloadPage () {
   const [showKeyModal, setShowKeyModal] = useState(false)
   const [notFound, setNotFound] = useState(false)
   const [keyInput, setKeyInput] = useState('')
+  const [loading, setLoading] = useState(true)
 
-  const getFileInfo = async () => {
+  const getFileInfo = async (keyHash) => {
     const object_id = window.location.pathname.split('/').pop()
     try {
-      const response = await fetch(`/api/files/${object_id}/info`)
+      const response = await fetch(`/api/files/${object_id}/info`,
+      {headers:{'x-key-hash': keyHash}})
       if (response.ok) {
         const data = await response.json()
         return data
@@ -136,11 +128,13 @@ export default function DownloadPage () {
       showToast.error('Please enter a decryption key')
       return
     }
-    const isValid= await verify_Key(keyInput)
-    if (!isValid){
+    const keyHash=await getKeyHash(keyInput)
+    const info = await getFileInfo(keyHash)
+    if (!info){
       showToast.error('Invalid decryption key')
       return
     }
+    setFileInfo(info)
     setEncryptionKey(keyInput)
     setShowKeyModal(false)
   }
@@ -155,7 +149,8 @@ export default function DownloadPage () {
 
     const object_id = window.location.pathname.split('/').pop()
     try {
-      const response = await fetch(`/api/files/${object_id}`)
+      const keyHash=await getKeyHash(encryptionKey)
+      const response = await fetch(`/api/files/${object_id}`, { headers: { 'x-key-hash': keyHash }})
 
       if (response.ok) {
         const encBlob = await response.blob()
@@ -179,32 +174,28 @@ export default function DownloadPage () {
   useEffect(() => {
   const urlKey = window.location.hash.substring(1)
   if (urlKey) {
-    verify_Key(urlKey).then(isValid => {
-      if (isValid) {
-        setEncryptionKey(urlKey)
-      } else {
-        showToast.error('Invalid decryption key')
-        setShowKeyModal(true)
+    getKeyHash(urlKey).then (keyHash=>{
+      getFileInfo(keyHash).then(info=>{
+        if(info){
+          setEncryptionKey(urlKey)
+          setFileInfo(info)
+        }else {
+          showToast.error ('Invlaid decrption key')
+          setShowKeyModal(true)
+        }
+        setLoading(false)
       }
+      )
     })
   } else {
     setShowKeyModal(true)
+    setLoading(false)
   }
 
-  getFileInfo().then(info => {
-    setFileInfo(info)
-    if (!info) {
-      setNotFound(true)
-    }
-  })
 }, [])
 
-  if (notFound)
-    return <NotFound/>;
-
-  if (!file_info)
-    return <Loading/>;
-
+  if (loading) return <Loading/>
+  if (!file_info && !showKeyModal) return <NotFound/>
   return (
     <main id='download_page'>
       {/* Key Modal */}
@@ -227,7 +218,7 @@ export default function DownloadPage () {
         </div>
       )}
 
-      <div id='download_container'>
+       {file_info && <div id='download_container'>
         <section id='download_info'>
           <h1 id='download_filename'>{file_info.filename}</h1>
           <div id='download_details'>
@@ -252,7 +243,8 @@ export default function DownloadPage () {
         <button id='download_button' onClick={downloadFile}>
           Download File
         </button>
-      </div>
+     
+      </div>}
     </main>
   )
 }
