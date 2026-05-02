@@ -106,19 +106,32 @@ export default function AdminPage() {
   {selectedUser && (
     <div id="user_files_modal">
       <div id="user_files_content">
-        <h2>{selectedUser.username}'s Files</h2>
-        <button onClick={() => setSelectedUser(null)}>Close</button>
+        <div id="user_files_content_header">
+          <h2>{selectedUser.username}'s Files</h2>
+          <button onClick={() => setSelectedUser(null)}>Close</button>
+        </div>
+        
         {userFiles.length === 0 ? (
           <p>No files found</p>
         ) : (
-          userFiles.map(file => (
-            <div key={file.id} className="file_row">
-              <span>{file.filename}</span>
-              <span>{(file.file_size / (1024 * 1024)).toFixed(2)} MB</span>
-              <span>{file.file_type}</span>
-              <span>{new Date(file.uploaded_at).toUTCString()}</span>
-            </div>
-          ))
+          <>
+          <div className="file_row">
+            <span>Name</span>
+            <span>Size</span>
+            <span>Type</span>
+            <span>Uploaded At</span>
+          </div>
+            {
+              userFiles.map(file => (
+              <div key={file.id} className="file_row">
+                <span>{file.filename}</span>
+                <span>{(file.file_size / (1024 * 1024)).toFixed(2)} MB</span>
+                <span>{file.file_type}</span>
+                <span>{new Date(file.uploaded_at).toUTCString()}</span>
+              </div>
+            ))
+          }
+          </>
         )}
       </div>
     </div>

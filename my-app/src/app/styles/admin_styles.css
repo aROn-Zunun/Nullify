@@ -226,8 +226,7 @@ body {
   border: 1px solid rgba(56, 189, 248, 0.18);
   border-radius: 18px;
   padding: 32px;
-  width: 700px;
-  max-width: 90%;
+  min-width: fit-content;
   max-height: 80vh;
   overflow-y: auto;
   box-shadow: 0 8px 25px rgba(0, 0, 0, 0.35);
@@ -263,4 +262,14 @@ body {
   border-bottom: 1px solid rgba(56, 189, 248, 0.1);
   font-size: 14px;
   color: #cbd5e1;
+  text-align: left;
+}
+
+.file_row span {
+  padding: 0 10px;
+}
+
+#user_files_content_header {
+  display: flex;
+  justify-content: space-between;
 }

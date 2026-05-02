@@ -70,20 +70,6 @@ function downloadBlob (blob, filename) {
   window.URL.revokeObjectURL(url)
 }
 
-function getFilename (response) {
-  const disposition = response.headers.get('Content-Disposition')
-  let filename = 'downloaded_file'
-
-  if (disposition && disposition.includes('filename=')) {
-    const filenameRegex = /filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/
-    const matches = filenameRegex.exec(disposition)
-    if (matches != null && matches[1]) {
-      filename = matches[1].replace(/['"]/g, '')
-    }
-  }
-
-  return filename
-}
 async function getKeyHash(decryption_key_hex){
   const decryption_key_raw= new Uint8Array(
   decryption_key_hex.match(/.{1,2}/g).map(byte => parseInt(byte, 16))
@@ -98,7 +84,6 @@ export default function DownloadPage () {
   const [file_info, setFileInfo] = useState(null)
   const [encryptionKey, setEncryptionKey] = useState('')
   const [showKeyModal, setShowKeyModal] = useState(false)
-  const [notFound, setNotFound] = useState(false)
   const [keyInput, setKeyInput] = useState('')
   const [loading, setLoading] = useState(true)
 
@@ -110,6 +95,12 @@ export default function DownloadPage () {
       if (response.ok) {
         const data = await response.json()
         return data
+      } else if (response.status === 404) {
+        setShowKeyModal(false);
+        return null;
+      } else if (response.status === 403) {
+        showToast.error('Invalid decryption key')
+        return null;
       } else {
         const data = await response.json()
         showToast.error(`Failed to fetch file info: ${data.error}`)
@@ -130,10 +121,11 @@ export default function DownloadPage () {
     }
     const keyHash=await getKeyHash(keyInput)
     const info = await getFileInfo(keyHash)
+    
     if (!info){
-      showToast.error('Invalid decryption key')
       return
     }
+
     setFileInfo(info)
     setEncryptionKey(keyInput)
     setShowKeyModal(false)
@@ -156,8 +148,8 @@ export default function DownloadPage () {
         const encBlob = await response.blob()
         const decryptedFile = await DecryptFile(encBlob, encryptionKey)
 
-        downloadBlob(decryptedFile, getFilename(response)) // Use original filename for download
-        showToast.success("File Downloaded successfullu!")
+        downloadBlob(decryptedFile, file_info.filename) // Use original filename for download
+        showToast.success("File Downloaded successfully!")
         setTimeout(()=>{
           window.location.href='/dashboard'
         },2000)
@@ -179,8 +171,7 @@ export default function DownloadPage () {
         if(info){
           setEncryptionKey(urlKey)
           setFileInfo(info)
-        }else {
-          showToast.error ('Invlaid decrption key')
+        } else {
           setShowKeyModal(true)
         }
         setLoading(false)
