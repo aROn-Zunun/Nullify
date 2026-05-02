@@ -41,3 +41,21 @@ export async function DELETE(request, {params}){
 
 
 }
+export async function GET(request, { params }) {
+  const token = parseAuthCookie(request.headers.get('cookie'))
+  if (!token)
+    return Response.json({ error: 'Unauthorized' }, { status: 401 })
+
+  const payload = verifyJwt(token)
+  if (!payload?.isAdmin)                           
+    return Response.json({ error: 'Forbidden' }, { status: 403 })
+
+  const { id } = await params                      
+
+  const [files] = await db.query(
+    'SELECT id, object_id, filename, file_size, file_type, uploaded_at FROM files WHERE user_id = ?',
+    [id]                                          
+  )
+
+  return Response.json({ files })
+}

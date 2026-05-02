@@ -5,13 +5,14 @@ import { useEffect, useState } from "react"
 export default function AdminPage() {
   const [stats, setStats] = useState({ user_count: 0, file_count: 0 , total_storage: 0 })
   const [users, setUsers] = useState([])
-  const [expanded, setExpanded] = useState(null) // tracks which user is expanded
+  const [selectedUser, setSelectedUser] = useState(null)
+  const [userFiles, setUserFiles] = useState([])
   
-
   useEffect(() => {
     async function fetchdata(){
       const res= await fetch ('/api/admin')
       const data = await res.json()
+      
       
       setUsers(data.users)
       
@@ -24,23 +25,33 @@ export default function AdminPage() {
     fetchdata()
   }, [])
 
+  // TO SHOW FILES OF SET USERS
+  useEffect(() => {
+    if (!selectedUser) return
+    async function fetchFiles() {
+      const res = await fetch(`/api/admin/user/${selectedUser.id}`)
+      const data = await res.json()
+      setUserFiles(data.files)
+    }
+    fetchFiles()
+  }, [selectedUser])
+
    //api to delete users, passing userid to the backend 
   async function deleteUser(id){
+    const userToDelete = users.find(user => user.id === id) 
     const res = await fetch(`/api/admin/user/${id}`, { method: 'DELETE' })
     if (res.ok){
       const data = await res.json()
       setUsers(users.filter(user => user.id!==id))
       setStats(prev =>({
         user_count: prev.user_count -1,
-        file_count: prev.file_count - data.deleted_file_count
+        file_count: prev.file_count - data.deleted_file_count,
+        total_storage: prev.total_storage - Number(userToDelete.storage_used)
       }))
       
     }
   }
 
-  function toggleUser(id) {
-    setExpanded(expanded === id ? null : id) // collapse if already open
-  }
 
   return (
     <div id="admin_container">
@@ -69,6 +80,7 @@ export default function AdminPage() {
     <span>USER</span>
     <span>EMAIL</span>
     <span>FILES</span>
+    <span>STORAGE</span>
     <span>ROLE</span>
     <span>JOINED</span>
     <span></span>
@@ -81,15 +93,36 @@ export default function AdminPage() {
       </div>
       <span className="user_email">{user.email}</span>
       <span>{user.file_count}</span>
+      <span>{(Number(user.storage_used) / (1024 * 1024)).toFixed(2)} MB</span>
       <span className={user.is_admin == 1? 'badge_admin' : 'badge_user'}>
         {user.is_admin ==1 ? 'admin' : 'user'}
       </span>
       <span>{user.created_at.slice(0, 16).replace('T', ' ')}</span>{/*im gettind a different time from my sql*/}
       <button className="delete_btn" onClick={() => deleteUser(user.id)}>Delete</button>
+      <button className="view_btn" onClick={() => setSelectedUser(user)}>View</button>
     </div>
   ))}
 </section>
-
+  {selectedUser && (
+    <div id="user_files_modal">
+      <div id="user_files_content">
+        <h2>{selectedUser.username}'s Files</h2>
+        <button onClick={() => setSelectedUser(null)}>Close</button>
+        {userFiles.length === 0 ? (
+          <p>No files found</p>
+        ) : (
+          userFiles.map(file => (
+            <div key={file.id} className="file_row">
+              <span>{file.filename}</span>
+              <span>{(file.file_size / (1024 * 1024)).toFixed(2)} MB</span>
+              <span>{file.file_type}</span>
+              <span>{new Date(file.uploaded_at).toUTCString()}</span>
+            </div>
+          ))
+        )}
+      </div>
+    </div>
+  )}
       
     </div>
   )
