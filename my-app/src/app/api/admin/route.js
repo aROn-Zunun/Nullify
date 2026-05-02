@@ -25,7 +25,7 @@ export async function GET(request) {
 
   const user_count = users.length
   const file_count = users.reduce((sum, u) => sum + u.file_count, 0)
-  const total_storage = users.reduce((sum, u) => sum + u.storage_used, 0)
+  const total_storage = users.reduce((sum, u) => sum + Number(u.storage_used), 0)
     
     
     return Response.json({ user_count, file_count, total_storage, users})

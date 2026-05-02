@@ -58,41 +58,39 @@ export default function AdminPage() {
         </div>
         <div className="stat_card">
           <p className="stat_label">Storage used</p>
-          <h2 className="stat_number">{(stats.total_storage/ (1024 * 1024)).toFixed(2)} MB</h2>
+          <h2 className="stat_number">{stats.total_storage >= 1073741824 
+              ? (Number(stats.total_storage) / (1024 * 1024 * 1024)).toFixed(2) + ' GB'
+              : (Number(stats.total_storage) / (1024 * 1024)).toFixed(2) + ' MB'}</h2>
         </div>
       </section>
 
       <section id="admin_users">
-        <h2>Users</h2>
-        {users.map(user => (
-  <div key={user.id} className="user_card">
-    <div className="user_row">
-      <div className="user_info">
-        <p className="user_name">{user.username}</p>
-        <p className="user_email">{user.email}</p>
-      </div>
-      <button 
-        className="expand_btn" 
-        onClick={() => toggleUser(user.id)}
-      >
-        {expanded === user.id ? 'Hide' : 'View'}
-      </button>
-    </div>
-    {expanded === user.id && (
-      <div className="user_details">
-        <p>Email: {user.email}</p>
-        <p>Joined: {new Date(user.created_at).toLocaleDateString()}</p>
-        <p>Files: {user.file_count}</p>
-        <p>Storage: {(user.storage_used / 1024 / 1024).toFixed(2)} MB</p>
-        <p>Admin: {user.is_admin ? 'Yes' : 'No'}</p>
-         <button className="delete_btn" onClick={() => deleteUser(user.id)}>
-          Delete User
-          </button>
-      </div>
-    )}
+  <div id="user_table_header">
+    <span>USER</span>
+    <span>EMAIL</span>
+    <span>FILES</span>
+    <span>ROLE</span>
+    <span>JOINED</span>
+    <span></span>
   </div>
-))}
-      </section>
+  {users.map(user => (
+    <div key={user.id} className="user_row">
+      <div className="user_info">
+        <div className={user.is_admin == 1 ? 'user_avatar avatar_admin' : 'user_avatar'}>{user.username.slice(0,2).toUpperCase()}</div>
+        <span className="user_name">{user.username}</span>
+      </div>
+      <span className="user_email">{user.email}</span>
+      <span>{user.file_count}</span>
+      <span className={user.is_admin == 1? 'badge_admin' : 'badge_user'}>
+        {user.is_admin ==1 ? 'admin' : 'user'}
+      </span>
+      <span>{user.created_at.slice(0, 16).replace('T', ' ')}</span>{/*im gettind a different time from my sql*/}
+      <button className="delete_btn" onClick={() => deleteUser(user.id)}>Delete</button>
+    </div>
+  ))}
+</section>
+
+      
     </div>
   )
 }

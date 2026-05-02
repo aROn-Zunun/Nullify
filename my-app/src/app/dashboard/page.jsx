@@ -26,10 +26,12 @@ export default function Dashboard() {
       fetchUploadCount()
     },[])
 
-  async function handleViewFiles(){
-    setShowFiles(true)
-  }
-
+  async function handleViewFiles() {
+  setShowFiles(true)
+  setTimeout(() => {
+    document.getElementById('users_files')?.scrollIntoView({ behavior: 'smooth' })
+  }, 100)
+}
   async function handleDeleteFile(objectId) {
     const response = await fetch(`/api/dashboard/files/${objectId}`, { method: 'DELETE' })
   if (!response.ok){
@@ -95,7 +97,7 @@ export default function Dashboard() {
     ))}
   </div>
 )}
-  <button onClick={deleteAccount} className="dashboard_button">Delete Account</button>
+  <button onClick={deleteAccount} className="delete_account_btn">Delete Account</button>
 </div>
   );
 }

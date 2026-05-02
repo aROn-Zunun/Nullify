@@ -7,7 +7,7 @@ body {
 
 #dashboard_container {
   width: calc(100% - 80px);
-  max-width: 1200px;
+  max-width: 100%;
   margin: 40px 0 0 40px;
   color: white;
 }
@@ -147,4 +147,27 @@ body {
   background: #ef4444;
   color: #fff;
   border-color: #ef4444;
+}
+
+
+/* delete account button */
+.delete_account_btn {
+  padding: 6px 16px;
+  border: 1px solid rgba(239, 68, 68, 0.4);
+  border-radius: 8px;
+  background: transparent;
+  color: #f87171;
+  font-weight: bold;
+  font-size: 13px;
+  cursor: pointer;
+  width: fit-content;
+  transition: all 0.2s;
+   margin-top: 24px;
+}
+
+.delete_account_btn:hover {
+  background: #ef4444;
+  color: #fff;
+  border-color: #ef4444;
+  box-shadow: 0 0 12px rgba(239, 68, 68, 0.4);
 }
