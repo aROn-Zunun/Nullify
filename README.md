@@ -76,4 +76,4 @@ Before running the project, ensure you have the following installed:
 
 - Ensure Docker services are running before starting the Next.js app.
 - For production deployment, consider securing your environment variables and database configurations.
-- The default root password for the provided docker compose file is: rootpassword
+- The default root password for the provided docker compose file is: `rootpassword`
