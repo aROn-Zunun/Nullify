@@ -142,18 +142,21 @@ body {
   font-size: 12px;
   width: fit-content;
 }
+
 .badge_user {
   background: rgba(56, 189, 248, 0.2);
   color: #38bdf8;
-  border: 1px solid rgba(255,255,255,0.1);
+  border: 1px solid rgba(255, 255, 255, 0.1);
   padding: 3px 10px;
   border-radius: 20px;
   font-size: 12px;
   width: fit-content;
 }
+
 .avatar_admin {
   background: #ef4444;
 }
+
 .user_row {
   display: grid;
   grid-template-columns: 2fr 2fr 1fr 1fr 1fr 1.2fr 0.5fr 0.5fr;
@@ -189,6 +192,7 @@ body {
   border-color: #ef4444;
   box-shadow: 0 0 12px rgba(239, 68, 68, 0.4);
 }
+
 /*view button*/
 .view_btn {
   padding: 6px 16px;
@@ -227,6 +231,7 @@ body {
   border-radius: 18px;
   padding: 32px;
   min-width: fit-content;
+  width: 400px;
   max-height: 80vh;
   overflow-y: auto;
   box-shadow: 0 8px 25px rgba(0, 0, 0, 0.35);
@@ -272,4 +277,5 @@ body {
 #user_files_content_header {
   display: flex;
   justify-content: space-between;
+  gap: 20px;
 }
